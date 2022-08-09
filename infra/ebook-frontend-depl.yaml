@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ebook-frontend-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ebook-frontend
+  template:
+    metadata:
+      labels:
+        app: ebook-frontend
+    spec:
+      containers:
+        - name: ebook-frontend
+          image: predatormart/ebook-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ebook-frontend-srv
+spec:
+  selector:
+    app: ebook-frontend
+  ports:
+    - name: ebook-frontend
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

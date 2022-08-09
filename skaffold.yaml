@@ -1,0 +1,38 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/*
+build:
+  local:
+    push: false
+  # googleCloudBuild:
+  #   projectId: ticket-dev-346309
+  artifacts:
+    - image: predatormart/product-rabbit
+      context: product
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.js"
+            dest: .
+    - image: predatormart/auth-rabbit
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+        buildArgs:
+          ENV: development
+      sync:
+        manual:
+          - src: "src/**/*.js"
+            dest: .
+    - image: predatormart/ebook-frontend
+      context: ebook_frontend
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
